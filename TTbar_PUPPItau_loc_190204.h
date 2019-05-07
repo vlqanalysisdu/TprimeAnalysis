@@ -4183,7 +4183,7 @@ void  TTbar_PUPPItau_loc_190204::Higgs_lbjet_Plots() {
 	float dR = 0.0, dPt = 0.0 ;
 	float ptcut = METCut_cat12[vr - 1] ;
 
-	if ( dR_mu_AK8(j, jet1, j, lvl) < 2.0 ) {
+	if ( dR_mu_AK8(j, jet1, j, lvl) > 2.0 ) {
 	 pass  = true ;
 	event_dR_Hmu  ++ ;
 	}
