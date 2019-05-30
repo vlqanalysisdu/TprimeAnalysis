@@ -16,12 +16,12 @@ ggNtuplizer::ggNtuplizer(const edm::ParameterSet& ps) :
   addFilterInfoAOD_          = ps.getParameter<bool>("addFilterInfoAOD");
   addFilterInfoMINIAOD_      = ps.getParameter<bool>("addFilterInfoMINIAOD");
   doNoHFMET_                 = ps.getParameter<bool>("doNoHFMET");
-
   doGenParticles_            = ps.getParameter<bool>("doGenParticles");
   runOnParticleGun_          = ps.getParameter<bool>("runOnParticleGun");
   runOnSherpa_               = ps.getParameter<bool>("runOnSherpa");
   dumpPFPhotons_             = ps.getParameter<bool>("dumpPFPhotons");
   dumpJets_                  = ps.getParameter<bool>("dumpJets");
+  dumpPuppiJets_             = ps.getParameter<bool>("dumpPuppiJets");
   dumpAK8Jets_               = ps.getParameter<bool>("dumpAK8Jets");
   dumpSoftDrop_              = ps.getParameter<bool>("dumpSoftDrop");
   dumpTaus_                  = ps.getParameter<bool>("dumpTaus");
@@ -45,6 +45,7 @@ ggNtuplizer::ggNtuplizer(const edm::ParameterSet& ps) :
   lheEventLabel_             = consumes<LHEEventProduct>               (ps.getParameter<InputTag>("LHEEventLabel"));
   puCollection_              = consumes<vector<PileupSummaryInfo> >    (ps.getParameter<InputTag>("pileupCollection"));
   genParticlesCollection_    = consumes<vector<reco::GenParticle> >    (ps.getParameter<InputTag>("genParticleSrc"));
+  genJetCollection_          = consumes<vector<reco::GenJet> >         (ps.getParameter<InputTag>("genJetSrc"));
   pfMETlabel_                = consumes<View<pat::MET> >               (ps.getParameter<InputTag>("pfMETLabel"));
   electronCollection_        = consumes<View<pat::Electron> >          (ps.getParameter<InputTag>("electronSrc"));
   gsfTracks_                 = consumes<View<reco::GsfTrack>>          (ps.getParameter<InputTag>("gsfTrackSrc"));
@@ -67,7 +68,10 @@ ggNtuplizer::ggNtuplizer(const edm::ParameterSet& ps) :
   recoCdsLabel_              = consumes<View<reco::Candidate>>         (ps.getParameter<InputTag>("packedPFCands"));
 
   jetsAK4Label_              = consumes<View<pat::Jet> >               (ps.getParameter<InputTag>("ak4JetSrc"));
+  puppijetsAK4Label_         = consumes<View<pat::Jet> >               (ps.getParameter<InputTag>("ak4JetPuppiSrc"));
   jetsAK8Label_              = consumes<View<pat::Jet> >               (ps.getParameter<InputTag>("ak8JetSrc"));
+  jetsAK8SubLabel_           = consumes<View<pat::Jet> >               (ps.getParameter<InputTag>("ak8SubJetSrc"));
+
   //boostedDoubleSVLabel_      = consumes<reco::JetTagCollection>        (ps.getParameter<InputTag>("boostedDoubleSVLabel"));
   newparticles_              =                                          ps.getParameter< vector<int > >("newParticles");
   //jecAK8PayloadNames_        =                                          ps.getParameter<std::vector<std::string> >("jecAK8PayloadNames"); 
@@ -91,10 +95,13 @@ ggNtuplizer::ggNtuplizer(const edm::ParameterSet& ps) :
   branchesPhotons(tree_);
   branchesElectrons(tree_);
   branchesMuons(tree_);
+  branchesPuppiJets(tree_);
+
   if (dumpPFPhotons_)   branchesPFPhotons(tree_);
   if (dumpHFElectrons_) branchesHFElectrons(tree_);
   if (dumpTaus_)        branchesTaus(tree_);
   if (dumpJets_)        branchesJets(tree_);
+  //if (dumpPuppiJets_)   branchesPuppiJets(tree_);
   if (dumpAK8Jets_)     branchesAK8Jets(tree_);
 }
 
@@ -110,6 +117,8 @@ void ggNtuplizer::analyze(const edm::Event& e, const edm::EventSetup& es) {
   if (doGenParticles_) {
     jetResolution_   = JME::JetResolution::get(es, "AK4PFchs_pt");
     jetResolutionSF_ = JME::JetResolutionScaleFactor::get(es, "AK4PFchs");
+    PuppijetResolution_   = JME::JetResolution::get(es, "AK4PFchs_pt");
+    PuppijetResolutionSF_ = JME::JetResolutionScaleFactor::get(es, "AK4PFchs");
     AK8jetResolution_   = JME::JetResolution::get(es, "AK8PFchs_pt");
     AK8jetResolutionSF_ = JME::JetResolutionScaleFactor::get(es, "AK8PFchs");
   }
@@ -146,10 +155,13 @@ void ggNtuplizer::analyze(const edm::Event& e, const edm::EventSetup& es) {
   fillElectrons(e, es, pv);
   fillMuons(e, pv, vtx);
   fillPhotons(e, es); 
+  fillPuppiJets(e,es);
+
   if (dumpPFPhotons_)    fillPFPhotons(e, es);
   if (dumpHFElectrons_ ) fillHFElectrons(e);
   if (dumpTaus_)         fillTaus(e);
   if (dumpJets_)         fillJets(e,es);
+  //if (dumpPuppiJets_)    fillPuppiJets(e,es);
   if (dumpAK8Jets_)      fillAK8Jets(e,es);
 
   hEvents_->Fill(1.5);

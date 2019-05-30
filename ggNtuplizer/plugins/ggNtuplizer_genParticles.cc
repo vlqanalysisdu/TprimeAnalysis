@@ -322,6 +322,7 @@ void ggNtuplizer::fillGenPart(const edm::Event& e) {
     return;
   }
 
+
   int genIndex = 0;
 
   for (vector<reco::GenParticle>::const_iterator ip = genParticlesHandle->begin(); ip != genParticlesHandle->end(); ++ip) {
@@ -341,6 +342,7 @@ void ggNtuplizer::fillGenPart(const edm::Event& e) {
       (status == 1 && ( abs(ip->pdgId()) >= 11 && abs(ip->pdgId()) <= 16 ) && ip->pt() > 3.0)  ||
       (status < 10 && abs(ip->pdgId()) == 15 && ip->pt() > 3.0);
       
+
     // select also Z, W, H, top and b 
     bool heavyParticle =
       ((    ip->pdgId()  == 23 && ip->isHardProcess()) || 
@@ -348,12 +350,12 @@ void ggNtuplizer::fillGenPart(const edm::Event& e) {
        (    ip->pdgId()  == 25 && ip->isHardProcess()) ||
        (abs(ip->pdgId()) ==  6 && ip->isHardProcess()) || 
        (abs(ip->pdgId()) ==  5 && ip->isHardProcess()));
-    
+
     bool newParticle = false;
     for (size_t inp = 0; inp < newparticles_.size(); ++inp) {
       if (abs(ip->pdgId()) == newparticles_[inp]) newParticle = true;
     }
-    
+
     if ( heavyParticle || photonOrLepton || quarks || newParticle ) {
       
       const reco::Candidate *p = (const reco::Candidate*)&(*ip);
@@ -386,6 +388,7 @@ void ggNtuplizer::fillGenPart(const edm::Event& e) {
           else if (abs(dp->pdgId())==15 || abs(dp->pdgId())==16) setbit(tmpStatusFlag, 7);
         }
       }
+
       if (ip->isLastCopy())  setbit(tmpStatusFlag, 8);
       mcStatusFlag.push_back(tmpStatusFlag);
 
@@ -445,6 +448,7 @@ void ggNtuplizer::fillGenPart(const edm::Event& e) {
 	mcCalIsoDR04.push_back( -999. );
 	mcTrkIsoDR04.push_back( -999. );
       }
+  //cout<<"am I am atlast  in gencollection 7 "<<endl;
 
       nMC_++;
     } // save info on particles of interest

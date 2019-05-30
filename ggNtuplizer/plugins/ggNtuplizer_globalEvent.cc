@@ -180,6 +180,8 @@ void ggNtuplizer::fillGlobalEvent(const edm::Event& e, const edm::EventSetup& es
       else if (name.find("HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30_v")          != string::npos) bitEleMuX = 48;
       else if (name.find("HLT_Ele17_CaloIdL_TrackIdL_IsoVL_PFJet30_v")          != string::npos) bitEleMuX = 49;
       else if (name.find("HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30_v")          != string::npos) bitEleMuX = 50;
+      else if (name.find("HLT_Ele45_CaloIdVT_GsfTrkIdT_PFJet200_PFJet50_v")     != string::npos) bitEleMuX = 51; // 2017
+      else if (name.find("HLT_Ele50_CaloIdVT_GsfTrkIdT_PFJet165_v")             != string::npos) bitEleMuX = 52; // 2017
 
       // Photon triggers
       if      (name.find("HLT_Photon22_v")                    != string::npos) bitPho =  0; //bit0(lowest)
@@ -252,6 +254,7 @@ void ggNtuplizer::fillGlobalEvent(const edm::Event& e, const edm::EventSetup& es
       else if (name.find("HLT_PFHT750_4JetPt50_v")                                     != string::npos) bitJet = 34;
       else if (name.find("HLT_PFHT750_4JetPt70_v")                                     != string::npos) bitJet = 35;
       else if (name.find("HLT_PFHT800_4JetPt50_v")                                     != string::npos) bitJet = 36;
+
     }
 
     if (year_ == 2017) {
@@ -310,6 +313,10 @@ void ggNtuplizer::fillGlobalEvent(const edm::Event& e, const edm::EventSetup& es
       else if (name.find("HLT_DiMu9_Ele9_CaloIdL_TrackIdL_DZ_v")                 != string::npos) bitEleMuX = 51; // 2017
       else if (name.find("HLT_Mu8_DiEle12_CaloIdL_TrackIdL_DZ_v")                != string::npos) bitEleMuX = 52; // 2017
       else if (name.find("HLT_Mu12_DoublePhoton20_v")                            != string::npos) bitEleMuX = 53; // 2017
+      else if (name.find("HLT_TkMu50_v*")                                        != string::npos) bitEleMuX = 54; // 2017
+      else if (name.find("HLT_Ele50_CaloIdVT_GsfTrkIdT_PFJet165_v")              != string::npos) bitEleMuX = 55; // 2017
+
+ 
       
       // Photon triggers
       if      (name.find("HLT_Photon22_v")                    != string::npos) bitPho =  0; //bit0(lowest)

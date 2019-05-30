@@ -34,6 +34,8 @@
 //#include "PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h"
 #include "HLTrigger/HLTcore/interface/HLTPrescaleProvider.h"
 
+
+
 using namespace std;
 
 void setbit(UShort_t& x, UShort_t bit);
@@ -77,6 +79,7 @@ class ggNtuplizer : public edm::EDAnalyzer {
   void branchesMuons      (TTree*);
   void branchesTaus       (TTree*);
   void branchesJets       (TTree*);
+  void branchesPuppiJets  (TTree*);
   void branchesAK8Jets    (TTree*);
 
   void fillGlobalEvent(const edm::Event&, const edm::EventSetup&);
@@ -90,6 +93,7 @@ class ggNtuplizer : public edm::EDAnalyzer {
   void fillMuons      (const edm::Event&, math::XYZPoint&, const reco::Vertex);
   void fillTaus       (const edm::Event&);
   void fillJets       (const edm::Event&, const edm::EventSetup&);
+  void fillPuppiJets  (const edm::Event&, const edm::EventSetup&);
   void fillAK8Jets    (const edm::Event&, const edm::EventSetup&);
 
   void cleanupPhotons();
@@ -104,6 +108,7 @@ class ggNtuplizer : public edm::EDAnalyzer {
   bool dumpPFPhotons_;
   bool dumpTaus_;
   bool dumpJets_;
+  bool dumpPuppiJets_;
   bool dumpAK8Jets_;
   bool dumpSoftDrop_;
   bool dumpPDFSystWeight_;
@@ -128,6 +133,7 @@ class ggNtuplizer : public edm::EDAnalyzer {
   edm::EDGetTokenT<LHEEventProduct>                lheEventLabel_;
   edm::EDGetTokenT<vector<PileupSummaryInfo> >     puCollection_;
   edm::EDGetTokenT<vector<reco::GenParticle> >     genParticlesCollection_;
+  edm::EDGetTokenT<vector<reco::GenJet> >          genJetCollection_;
   edm::EDGetTokenT<edm::View<pat::MET> >           pfMETlabel_;
   edm::EDGetTokenT<edm::View<pat::Electron> >      electronCollection_;
   edm::EDGetTokenT<edm::View<pat::Photon> >        photonCollection_;
@@ -144,7 +150,9 @@ class ggNtuplizer : public edm::EDAnalyzer {
   edm::EDGetTokenT<vector<pat::PackedCandidate> >  pckPFCdsLabel_;
   edm::EDGetTokenT<edm::View<reco::Candidate> >    recoCdsLabel_;
   edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK4Label_;
+  edm::EDGetTokenT<edm::View<pat::Jet> >           puppijetsAK4Label_;
   edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK8Label_;
+  edm::EDGetTokenT<edm::View<pat::Jet> >           jetsAK8SubLabel_;
   edm::EDGetTokenT<reco::JetTagCollection>         boostedDoubleSVLabel_;
   edm::EDGetTokenT<pat::PackedCandidateCollection> pckPFCandidateCollection_;
 
@@ -167,6 +175,8 @@ class ggNtuplizer : public edm::EDAnalyzer {
 
   JME::JetResolution            jetResolution_;
   JME::JetResolutionScaleFactor jetResolutionSF_;
+  JME::JetResolution            PuppijetResolution_;
+  JME::JetResolutionScaleFactor PuppijetResolutionSF_;
   JME::JetResolution            AK8jetResolution_;
   JME::JetResolutionScaleFactor AK8jetResolutionSF_;
 

@@ -1,10 +1,15 @@
 import FWCore.ParameterSet.Config as cms
 
 process = cms.Process('ggKit')
-
+process.options = cms.untracked.PSet(
+    SkipEvent = cms.untracked.vstring('ProductNotFound')
+    )
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.options = cms.untracked.PSet( allowUnscheduled = cms.untracked.bool(True) )
-
+process.options   = cms.untracked.PSet(
+    SkipEvent   = cms.untracked.vstring('ProductNotFound'),
+    wantSummary = cms.untracked.bool(True)
+    )
 process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 #process.load("Configuration.Geometry.GeometryRecoDB_cff")
 process.load("Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff")
@@ -19,9 +24,11 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 process.source = cms.Source("PoolSource",
                             fileNames = cms.untracked.vstring(
-        'file:/data4/cmkuo/testfiles/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_RunIIFall17MiniAODv2.root'
-        ))
-
+      #  'file:/data4/cmkuo/testfiles/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_RunIIFall17MiniAODv2.root'
+	#'/store/mc/RunIISummer16MiniAODv2/WW_TuneCUETP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/60000/00E95BAA-C3D7-E611-A416-0025905A60BC.root'        ))
+  #'/store/mc/RunIISummer16MiniAODv3/WW_TuneCUETP8M1_13TeV-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v2/270000/9439498F-29EB-E811-B02A-0CC47AFCC626.root'))
+  #'/store/mc/RunIISpring15DR74/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/Asympt25ns_MCRUN2_74_V9-v1/80000/CA0AC188-5103-E511-B909-842B2B298D13.root'))
+  '/store/mc/RunIISummer16MiniAODv3/TT_TuneCUETP8M2T4up_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v1/90000/FE5B312B-580B-E911-B102-1866DAEA6D08.root'))
 #process.load("PhysicsTools.PatAlgos.patSequences_cff")
 
 process.load( "PhysicsTools.PatAlgos.producersLayer1.patCandidates_cff" )
@@ -63,10 +70,11 @@ process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService
 process.load("ggAnalysis.ggNtuplizer.ggNtuplizer_miniAOD_cfi")
 process.ggNtuplizer.year=cms.int32(2017)
 process.ggNtuplizer.doGenParticles=cms.bool(True)
-process.ggNtuplizer.dumpPFPhotons=cms.bool(False)
-process.ggNtuplizer.dumpHFElectrons=cms.bool(False)
+process.ggNtuplizer.dumpPFPhotons=cms.bool(True)
+process.ggNtuplizer.dumpHFElectrons=cms.bool(True)
 process.ggNtuplizer.dumpJets=cms.bool(True)
-process.ggNtuplizer.dumpAK8Jets=cms.bool(False)
+process.ggNtuplizer.dumpPuppiJets=cms.bool(True)
+process.ggNtuplizer.dumpAK8Jets=cms.bool(True)
 process.ggNtuplizer.dumpSoftDrop= cms.bool(True)
 process.ggNtuplizer.dumpTaus=cms.bool(False)
 process.ggNtuplizer.triggerEvent=cms.InputTag("slimmedPatTrigger", "", "PAT")

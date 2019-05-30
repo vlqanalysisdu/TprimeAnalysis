@@ -12,6 +12,7 @@
 #include "CLHEP/Random/RandomEngine.h"
 #include "CLHEP/Random/RandGauss.h"
 
+
 using namespace std;
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
 
@@ -240,13 +241,16 @@ void ggNtuplizer::fillJets(const edm::Event& e, const edm::EventSetup& es) {
     jetRawEn_.push_back( (*iJet).correctedJet("Uncorrected").energy());
     jetMt_.push_back(    iJet->mt());
     jetArea_.push_back(  iJet->jetArea());
+
     jetCEF_.push_back(   iJet->chargedEmEnergyFraction());
+
     jetNEF_.push_back(   iJet->neutralEmEnergyFraction());
     jetCHF_.push_back(   iJet->chargedHadronEnergyFraction());
     jetNHF_.push_back(   iJet->neutralHadronEnergyFraction());
     jetNCH_.push_back(   iJet->chargedMultiplicity());
     jetNNP_.push_back(   iJet->neutralMultiplicity());
     jetMUF_.push_back(   iJet->muonEnergyFraction());
+
     if (development_) {
       jetHFHAE_.push_back( iJet->HFHadronEnergy());
       jetHFEME_.push_back( iJet->HFEMEnergy());
@@ -423,6 +427,7 @@ void ggNtuplizer::fillJets(const edm::Event& e, const edm::EventSetup& es) {
     
     nJet_++;
   }
-  
+
+
   delete jecUnc;
 }
